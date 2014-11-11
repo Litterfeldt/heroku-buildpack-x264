@@ -19,6 +19,7 @@ cd x264
 git checkout 8be6600d10a74ca241dbb27e096883ceed7b4082
 ./configure --enable-static --enable-shared --disable-asm --prefix=/app/vendor/x264
 make
+make install
 
 echo "exporting PATH and LIBRARY_PATH" | indent
 PROFILE_PATH="$BUILD_DIR/.profile.d/x264.sh"
