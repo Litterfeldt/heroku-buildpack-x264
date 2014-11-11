@@ -7,18 +7,21 @@ indent() {
 echo "-----> Install x264"
 BUILD_DIR=$1
 VENDOR_DIR="vendor"
-DOWNLOAD_URL="http://download.videolan.org/pub/videolan/x264/binaries/linux-x86_64/x264-r2479-dd79a61"
+GIT_URL="git://git.videolan.org/x264.git"
 
-echo "DOWNLOAD_URL = " $DOWNLOAD_URL | indent
+echo "GIT_URL = " $GIT_URL | indent
 
 cd $BUILD_DIR
 mkdir -p $VENDOR_DIR
 cd $VENDOR_DIR
-mkdir -p bin
-curl -L --silent $DOWNLOAD_URL >> bin/x264
+git clone $GIT_URL
+cd x264
+git checkout 8be6600d10a74ca241dbb27e096883ceed7b4082
+./configure --enable-static --enable-shared --disable-asm --prefix=/app/vendor/x264
+make
 
 echo "exporting PATH and LIBRARY_PATH" | indent
 PROFILE_PATH="$BUILD_DIR/.profile.d/x264.sh"
 mkdir -p $(dirname $PROFILE_PATH)
-echo 'export PATH="$PATH:vendor/x264/bin"' >> $PROFILE_PATH
-#echo 'export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:vendor/x264/lib"' >> $PROFILE_PATH
+echo 'export PATH="$PATH:/app/vendor/x264/bin"' >> $PROFILE_PATH
+echo 'export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/app/vendor/x264/lib"' >> $PROFILE_PATH
